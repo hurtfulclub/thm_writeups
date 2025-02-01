@@ -16,7 +16,8 @@ THM Relevant Room Walkthrough: https://tryhackme.com/room/relevant
 - check whoami & whoami /priv --> SeImpersonatePrivilege enabled is a major security concern
 - use JuicyPotato or PrintSpoofer to escalate
 - Upload [PrintSpoofer](https://github.com/itm4n/PrintSpoofer) and run as instructed
-- whoami --> 
+- whoami --> nt authority\system
+- root flag in admin/desktop
 
 
 
