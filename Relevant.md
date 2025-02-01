@@ -13,7 +13,7 @@ Let's first begin by enumerating the machine with nmap. We will run nmap with
 nmap -sS -sV -sC -Pn  <TARGET_IP>
 ```
 
-![[THM_Writeups/attachments/Screenshot 2025-02-01 160003.png]]
+![](attachments/Screenshot%202025-02-01%20160003.png)
 
 We can see we have 5 open ports. It's good to keep in mind we only scanned the default number of ports with nmap, which by default should be the 1000 most popular ports.
 
@@ -21,7 +21,7 @@ The 3 most interesting ports we have here are 80, 445, and 3389. (Webserver, SMB
 
 Let's start by looking into these. The webserver seems to host this page: 
 
-![[attachments/Screenshot 2025-02-01 160429.png]]
+![](THM_Writeups/attachments/Screenshot%202025-02-01%20160429.png)
 
 The first thing I think of when I see this and port 445 open is a possible EternalBlue exploit depending on the version of Windows Server.
 
