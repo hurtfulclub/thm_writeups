@@ -13,7 +13,7 @@ Let's first begin by enumerating the machine with nmap. We will run nmap with
 nmap -sS -sV -sC -Pn  <TARGET_IP>
 ```
 
-![[attachments/Screenshot 2025-02-01 160003.png]]
+![[THM_Writeups/attachments/Screenshot 2025-02-01 160003.png]]
 
 We can see we have 5 open ports. It's good to keep in mind we only scanned the default number of ports with nmap, which by default should be the 1000 most popular ports.
 
