@@ -13,7 +13,7 @@ Let's first begin by enumerating the machine with nmap. We will run nmap with
 nmap -sS -sV -sC -Pn  <TARGET_IP>
 ```
 
-![[../Screenshot 2025-02-01 160003.png]]
+![[attachments/Screenshot 2025-02-01 160003.png]]
 
 We can see we have 5 open ports. It's good to keep in mind we only scanned the default number of ports with nmap, which by default should be the 1000 most popular ports.
 
@@ -21,7 +21,7 @@ The 3 most interesting ports we have here are 80, 445, and 3389. (Webserver, SMB
 
 Let's start by looking into these. The webserver seems to host this page: 
 
-![[../Screenshot 2025-02-01 160429.png]]
+![[attachments/Screenshot 2025-02-01 160429.png]]
 
 The first thing I think of when I see this and port 445 open is a possible EternalBlue exploit depending on the version of Windows Server.
 
@@ -35,19 +35,19 @@ smbclient -L //10.10.71.74
 
 We see we have some shares available. We have 3 hidden shares indicated by the $ and then a regular share. 
 
-![[../Screenshot 2025-02-01 161102.png]]
+![[attachments/Screenshot 2025-02-01 161102.png]]
 
 Let's try to connect to them anonymously without passing a -U (User) param.
 
-![[../Screenshot 2025-02-01 161728.png]]
+![[attachments/Screenshot 2025-02-01 161728.png]]
 
 I was able to connect to the IPC share and the last share. I would not expect to find anything in the IPC share because it's used for Inter-Process Communication and not file storage. What's interesting is we were able to see that the last share nt4wrksv actually has a file in it. Let's download it and check it out.
 
-![[../Screenshot 2025-02-01 162800.png]]
+![[attachments/Screenshot 2025-02-01 162800.png]]
 
 We see that we have some encoded passwords. It looked like Base64 was used to encode them so let's decode them to see if we have anything here.
 
-![[../Screenshot 2025-02-01 163104.png]]
+![[attachments/Screenshot 2025-02-01 163104.png]]
 
 We get a username and some passwords! 
 
