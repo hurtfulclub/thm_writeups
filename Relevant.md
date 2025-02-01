@@ -56,5 +56,23 @@ Bill - Juw4nnaM4n420696969!$$$
 Bob - !P@$$W0rD!123 
 ```
 
-The only place I can think to use them is RDP since that port is also open. Let's try 
+The only place I can think to use them is RDP since that port is also open. Let's try. 
+
+RDP does not seem to work with either password and just fails or freezes.
+
+![](attachments/Pasted%20image%2020250201170439.png)
+
+At this point I was feeling a bit stuck. Let's maybe try to enum the subdirectories and then let's look at SMB again. Maybe we can exploit something there. 
+
+Running Gobuster gives us nothing interesting in terms of directories and takes very long. I used directory-list-2.3-medium.txt
+
+At this point, the machine became unresponsive which was common in this lab and I had to restart it. I ran MS17-010 SMB RCE Detection to see if maybe the system is vulnerable to EternalBlue. The result told me that the host is likely vulnerable to it, so I tried running EternalBlue.
+
+![](attachments/Pasted%20image%2020250201172528.png)
+
+Running EternalBlue did not actually work and it once again froze the system. 
+
+Once again, feeling stuck the only thing I can think of is to nmap all the ports instead of just the 1000 most popular ports. This also takes very long.
+
+![](attachments/Pasted%20image%2020250201174152.png)
 
