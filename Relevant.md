@@ -2,6 +2,8 @@
 ---
 THM Relevant Room Walkthrough: https://tryhackme.com/room/relevant
 
+
+
 ## Summary
 ---
 - nmap
@@ -15,6 +17,16 @@ THM Relevant Room Walkthrough: https://tryhackme.com/room/relevant
 - use JuicyPotato or PrintSpoofer to escalate
 - Upload [PrintSpoofer](https://github.com/itm4n/PrintSpoofer) and run as instructed
 - whoami --> 
+
+
+
+## Difficulties/Lessons Learned
+---
+- Main difficulty on this room was the long enum time for subdirectories and the system constantly freezing
+- learning about PrintSpoofer and User Priv in Windows
+
+
+
 ## Walkthrough
 ---
 Let's first begin by enumerating the machine with nmap. We will run nmap with
