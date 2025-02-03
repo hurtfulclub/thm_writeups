@@ -6,13 +6,25 @@ THM Skynet Room Walkthrough: https://tryhackme.com/room/skynet
 
 ## Summary
 ---
-- 
+- Enum ports and subdirectories
+- Enum the Samba shares
+- Go into the Anonymous share on SMB and download files
+- Use the information in files to get login info for SquirrelMail
+- Use Password found in SquirrelMail to log into SMB share for miles (Make sure to use -milesdyson as username)
+- Download the file from share and check the subdirectory listed.
+- Enum the new subdirectory and navigate to /administrator
+- Host a webserver for reverse shell and run Cuppa exploit https://www.exploit-db.com/exploits/25971
+- Get User Flag
+- Check Cronjobs and exploit the script file running backup with https://medium.com/@polygonben/linux-privilege-escalation-wildcards-with-tar-f79ab9e407fa
+- Find root flag
 
 
 
 ## Difficulties/Lessons Learned
 ---
-- 
+- Forgot to add username when logging into SMB share
+- Learned how to brute force logins with multiple usernames and password lists
+- Tried to privesc with a new reverse shell spawned from the root running the cronjob, but it never caught. Not sure why, may try again. The exploit outlined in the medium article worked easily.
 
 
 
